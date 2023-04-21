@@ -13,6 +13,9 @@ from machine import Pin
 import ujson as json
 from board import Board
 
+import plasma_action
+import plasma_config 
+
 BOARD_TYPE = Board().type
 print("Board type: " + BOARD_TYPE)
 
@@ -78,6 +81,10 @@ async def stop_server(request, response):
     await server.stop_server()
     shutdown = True
 
+async def set_plasma_pattern( request, response, pattern):
+    print("Plasma pattern set to "+pattern)
+    plasma_config.state = int(pattern)
+    await send_status(request, response)
 
 async def main():
     global shutdown
@@ -92,7 +99,10 @@ async def main():
         else:
             led.off()
             await asyncio.sleep(0.2)
-            
+        
+        if plasma_config.state != 0:
+            await plasma_action.run_plasma_pattern()
+
 server = GurgleAppsWebserver(config.WIFI_SSID, config.WIFI_PASSWORD, port=80, timeout=20, doc_root="/www", log_level=2)
 server.add_function_route("/set-delay/<delay>", set_delay)
 server.add_function_route(
@@ -105,6 +115,8 @@ server.add_function_route("/status", send_status)
 server.add_function_route("/example/func/<param1>/<param2>", example_func)
 server.add_function_route("/hello/<name>", say_hello)
 server.add_function_route("/stop-server", stop_server)
+
+server.add_function_route("/plasma/<pattern>", set_plasma_pattern)
 
 asyncio.run(server.start_server_with_background_task(main))
 print('DONE')
