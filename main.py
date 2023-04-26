@@ -100,7 +100,7 @@ async def main():
             led.off()
             await asyncio.sleep(0.2)
         
-        if plasma_config.state != 0:
+        if int(plasma_config.state) != 0:
             await plasma_action.run_plasma_pattern()
 
 server = GurgleAppsWebserver(config.WIFI_SSID, config.WIFI_PASSWORD, port=80, timeout=20, doc_root="/www", log_level=2)
