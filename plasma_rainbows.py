@@ -2,6 +2,7 @@ import plasma
 from plasma import plasma_stick
 import time
 import plasma_config
+import uasyncio as asyncio
 
 
 """
@@ -36,6 +37,6 @@ async def rainbows():
             hue = float(i) / NUM_LEDS
             led_strip.set_hsv(i, hue + offset, 1.0, 1.0)
 
-        time.sleep(1.0 / UPDATES)
+        await asyncio.sleep(1.0 / UPDATES)
 
 
