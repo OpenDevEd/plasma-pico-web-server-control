@@ -3,6 +3,7 @@ from plasma import plasma_stick
 import time
 from random import random, uniform
 import plasma_config
+import uasyncio as asyncio
 
 """
 A basic fire effect.
@@ -25,7 +26,7 @@ async def fire():    # Set how many LEDs you have
                 led_strip.set_hsv(i, uniform(0.0, 50 / 360), 1.0, random())
             except:
                 print("led_strip error")
-        time.sleep(0.5)
+        await asyncio.sleep(0.5)
         #k=k+1
         #print("Fire"+str(k))
         
